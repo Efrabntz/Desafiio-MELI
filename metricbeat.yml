@@ -1,0 +1,27 @@
+metricbeat.modules:
+  - module: docker
+    metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]
+    hosts: ["unix:///var/run/docker.sock"]
+    enabled: true
+    period: 10s
+    processors:
+      - add_cloud_metadata: ~
+      - add_docker_metadata: ~
+
+  - module: system
+    metricsets:
+      - network     # Métricas de red para detectar tráfico inusual
+    enabled: true
+    period: 10s
+
+  - module: mysql
+    metricsets:
+      - status      # Métricas de estado del servidor MySQL
+      - performance # Métricas de rendimiento del servidor MySQL
+    hosts: ["tcp(localhost:3306)/"]
+    username: "your_username"
+    password: "your_password"
+    enabled: true
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
