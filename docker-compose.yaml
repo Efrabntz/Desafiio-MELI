@@ -11,10 +11,10 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
     logging:
-      driver: json-file
+      driver: gelf
       options:
-        max-size: "10m"
-        max-file: "3"
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        tag: "app"
 
   mysql:
     image: mysql:5.7
@@ -24,13 +24,13 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
     logging:
-      driver: json-file
+      driver: gelf
       options:
-        max-size: "10m"
-        max-file: "3"
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        tag: "mysql"
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     environment:
       - discovery.type=single-node
       - cluster.name=docker-cluster
@@ -44,29 +44,13 @@ services:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-    deploy:
-      resources:
-        limits:
-          memory: 1g
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.0
+    image: docker.elastic.co/kibana/kibana:7.10.1
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http:localhost:5601
     ports:
       - 5601:5601
-    depends_on:
-      - elasticsearch
-
-  filebeat:
-    image: docker.elastic.co/beats/filebeat
-    user: root
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /home/oem/Documents/Desafio-MELI/Desafiio-MELI/filebeat.yml:/usr/share/filebeat/filebeat.yml
-    depends_on:
-      - elasticsearch
 
 volumes:
   todo-mysql-data:
