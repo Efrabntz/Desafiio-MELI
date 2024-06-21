@@ -10,11 +10,8 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
-        tag: "app"
+    depends_on:
+      - elasticsearch
 
   mysql:
     image: mysql:5.7
@@ -23,11 +20,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
-        tag: "mysql"
+    depends_on:
+      - elasticsearch
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
