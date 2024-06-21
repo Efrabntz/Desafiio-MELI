@@ -13,7 +13,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        gelf-address: "udp://elasticsearch:9200"  # Dirección de Elasticsearch
         tag: "app"
 
   mysql:
@@ -26,7 +26,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        gelf-address: "udp://elasticsearch:9200"  # Dirección de Elasticsearch
         tag: "mysql"
 
   elasticsearch:
