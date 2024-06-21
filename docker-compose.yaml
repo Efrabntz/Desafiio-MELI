@@ -10,6 +10,11 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        tag: "app"
     depends_on:
       - elasticsearch
 
@@ -20,6 +25,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
+        tag: "mysql"
     depends_on:
       - elasticsearch
 
