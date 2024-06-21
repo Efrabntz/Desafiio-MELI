@@ -13,7 +13,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://localhost:5601"  # Dirección de Elasticsearch
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
         tag: "app"
 
   mysql:
@@ -26,7 +26,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "udp://localhost:5601"
+        gelf-address: "udp://elasticsearch:12201"  # Dirección de Elasticsearch
         tag: "mysql"
 
   elasticsearch:
@@ -44,13 +44,19 @@ services:
       - esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+    deploy:
+      resources:
+        limits:
+          memory: 1g
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.10.1
     environment:
-      - ELASTICSEARCH_HOSTS=http://localhost:5601
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - 5601:5601
+    depends_on:
+      - elasticsearch
 
 volumes:
   todo-mysql-data:
