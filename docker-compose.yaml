@@ -16,7 +16,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-
   mysql:
     image: mysql:5.7
     volumes:
@@ -29,7 +28,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
@@ -64,14 +62,9 @@ services:
     image: docker.elastic.co/beats/filebeat
     user: root
     volumes:
-      - type: bind
-        source: /home/oem/Documents/Desafio-MELI/Desafiio-MELI/filebeat.yml
-        target: /var/lib/docker/containers
-        read_only: false
-      - type: bind
-        source: /var/lib/docker/containers
-        target: /var/lib/docker/containers
-        read_only: false
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/oem/Documents/Desafio-MELI/Desafiio-MELI/filebeat.yml:/usr/share/filebeat/filebeat.yml
     depends_on:
       - elasticsearch
 
