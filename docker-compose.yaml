@@ -67,10 +67,13 @@ services:
     user: root
     volumes:
       - type: bind
+        source: /home/oem/Documents/Desafio-MELI/Desafiio-MELI/filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+        read_only: true
+      - type: bind
         source: /var/lib/docker/containers
         target: /var/lib/docker/containers
         read_only: true
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
     depends_on:
       - elasticsearch
 
