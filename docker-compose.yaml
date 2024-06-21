@@ -21,27 +21,6 @@ services:
      MYSQL_ROOT_PASSWORD: secret
      MYSQL_DATABASE: todos
 
-
- elasticsearch:
-   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
-   environment:
-     - discovery.type=single-node
-     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Ajusta la memoria según tus necesidades
-   ports:
-     - 9200:9200
-   networks:
-     - todo-app
-
-
- kibana:
-   image: docker.elastic.co/kibana/kibana:7.17.1
-   ports:
-     - 5601:5601
-   environment:
-     ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-   networks:
-     - todo-app
-
 metricbeat:
   image: docker.elastic.co/beats/metricbeat:7.17.1
   user: root
@@ -54,6 +33,24 @@ metricbeat:
     - elasticsearch
   restart: always
 
+ elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+   environment:
+     - discovery.type=single-node
+     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Ajusta la memoria según tus necesidades
+   ports:
+     - 9200:9200
+   networks:
+     - todo-app
+
+ kibana:
+   image: docker.elastic.co/kibana/kibana:7.17.1
+   ports:
+     - 5601:5601
+   environment:
+     ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+   networks:
+     - todo-app
 
 networks:
  todo-app:
