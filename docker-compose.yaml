@@ -15,8 +15,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    depends_on:
-      - elasticsearch
+
 
   mysql:
     image: mysql:5.7
@@ -30,11 +29,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    depends_on:
-      - elasticsearch
+
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     environment:
       - discovery.type=single-node
       - cluster.name=docker-cluster
@@ -54,7 +52,7 @@ services:
           memory: 1g
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.1
+    image: docker.elastic.co/kibana/kibana:7.10.0
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
@@ -63,17 +61,17 @@ services:
       - elasticsearch
 
   filebeat:
-    image: docker.elastic.co/beats/filebeat:7.10.1
+    image: docker.elastic.co/beats/filebeat
     user: root
     volumes:
       - type: bind
         source: /home/oem/Documents/Desafio-MELI/Desafiio-MELI/filebeat.yml
-        target: /usr/share/filebeat/filebeat.yml
-        read_only: true
+        target: /var/lib/docker/containers
+        read_only: false
       - type: bind
         source: /var/lib/docker/containers
         target: /var/lib/docker/containers
-        read_only: true
+        read_only: false
     depends_on:
       - elasticsearch
 
