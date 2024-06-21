@@ -1,46 +1,48 @@
 version: "3.7"
 
+
 services:
-  app:
-    image: pablokbs/getting-started:v2
-    ports:
-      - 3000:3000
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: todos
-
-mysql:
-  image: mysql:5.7
-  command: --general-log --general-log-file=/var/log/mysql/general.log
-  volumes:
-    - ./todo-mysql-data:/var/lib/mysql
-    - ./mysql-logs:/var/log/mysql  # Monta un volumen para los logs de MySQL
-  environment:
-    MYSQL_ROOT_PASSWORD: secret
-    MYSQL_DATABASE: todos
+ app:
+   image: pablokbs/getting-started:v2
+   ports:
+     - 3000:3000
+   environment:
+     MYSQL_HOST: mysql
+     MYSQL_USER: root
+     MYSQL_PASSWORD: secret
+     MYSQL_DB: todos
 
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
-    environment:
-      - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Ajusta la memoria según tus necesidades
-    ports:
-      - 9200:9200
-    networks:
-      - todo-app
+ mysql:
+   image: mysql:5.7
+   volumes:
+     - ./todo-mysql-data:/var/lib/mysql
+   environment:
+     MYSQL_ROOT_PASSWORD: secret
+     MYSQL_DATABASE: todos
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.17.1
-    ports:
-      - 5601:5601
-    environment:
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    networks:
-      - todo-app
+
+ elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+   environment:
+     - discovery.type=single-node
+     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Ajusta la memoria según tus necesidades
+   ports:
+     - 9200:9200
+   networks:
+     - todo-app
+
+
+ kibana:
+   image: docker.elastic.co/kibana/kibana:7.17.1
+   ports:
+     - 5601:5601
+   environment:
+     ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+   networks:
+     - todo-app
+
 
 networks:
-  todo-app:
-    driver: bridge
+ todo-app:
+   driver: bridge
