@@ -1,9 +1,6 @@
 version: "3.7"
 
 services:
-
-#docker run -dp 3000:3000 --network todo-app -e MYSQL_HOST=mysql -e MYSQL_USER=root -e MYSQL_PASSWORD=secret -e MYSQL_DB=todos getting-started:v2
-
   app:
     image: pablokbs/getting-started:v2
     ports:
@@ -13,8 +10,6 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
-  
-# docker run -d     --network todo-app --network-alias mysql     -v todo-mysql-data:/var/lib/mysql     -e MYSQL_ROOT_PASSWORD=secret     -e MYSQL_DATABASE=todos     mysql:5.7
 
   mysql:
     image: mysql:5.7
@@ -23,3 +18,26 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Ajusta la memoria según tus necesidades
+    ports:
+      - 9200:9200
+    networks:
+      - todo-app
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.1
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    networks:
+      - todo-app
+
+networks:
+  todo-app:
+    driver: bridge
