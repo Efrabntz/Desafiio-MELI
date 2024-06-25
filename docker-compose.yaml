@@ -7,7 +7,7 @@ services:
   app:
     image: pablokbs/getting-started:v2
     ports:
-      - 80:80
+      - 3000:3000
     environment:
       MYSQL_HOST: mysql
       MYSQL_USER: root
