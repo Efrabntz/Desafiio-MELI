@@ -26,7 +26,7 @@ services:
    user: root
    volumes:
      - /var/run/docker.sock:/var/run/docker.sock:ro
-     - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+     - ./metricbeat.yml:/usr/share/metricbeat.yml
    networks:
      - todo-app
    depends_on:
