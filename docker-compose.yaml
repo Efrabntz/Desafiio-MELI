@@ -31,7 +31,6 @@ services:
      - todo-app
    depends_on:
      - elasticsearch
-   restart: always
 
 
  elasticsearch:
